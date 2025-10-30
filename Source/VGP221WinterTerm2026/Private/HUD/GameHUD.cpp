@@ -1,0 +1,57 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "HUD/GameHUD.h"
+#include "Widgets/SWeakWidget.h"
+
+void AGameHUD::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// 2. Slates method of making UI
+	ShowSettingsMenu();
+}
+
+void AGameHUD::DrawHUD()
+{
+	Super::DrawHUD();
+
+	if (!CrosshairTexture) return;
+
+
+	// Canvas Dimensions
+	float CanvasWidth = Canvas->ClipX;
+	float CanvasHeight = Canvas->ClipY;
+	FVector2D CanvasCenter(CanvasWidth * 0.5f, CanvasHeight * 0.5f);
+
+	// Crosshair dimensions
+	float CrosshairWidth = CrosshairTexture->GetSurfaceWidth();
+	float CrosshairHeight = CrosshairTexture->GetSurfaceHeight();
+	float CrosshairScale = 5.0f;
+	FVector2D CrosshairHalfSize(CrosshairWidth * 0.5f, CrosshairHeight * 0.5f);
+
+	FVector2D CrosshairDrawPosition(CanvasCenter.X - CrosshairHalfSize.X, CanvasCenter.Y - CrosshairHalfSize.Y);
+	FVector2D CrosshairSize(CrosshairWidth * CrosshairScale, CrosshairHeight * CrosshairScale);
+
+	// Draw the crosshair
+	FCanvasTileItem CrosshairItem(CrosshairDrawPosition, CrosshairTexture->GetResource(), CrosshairSize, FLinearColor::White);
+	CrosshairItem.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(CrosshairItem);
+}
+
+void AGameHUD::ShowSettingsMenu()
+{
+	SettingsWidget = SNew(SSettingsWidget).OwningHUD(this).MyInt(221);
+	GEngine->GameViewport->AddViewportWidgetContent(SAssignNew(SettingsWidgetContainer, SWeakWidget).PossiblyNullContent(SettingsWidget.ToSharedRef()));
+
+	PlayerOwner->bShowMouseCursor = true;
+	PlayerOwner->SetInputMode(FInputModeUIOnly());
+}
+
+void AGameHUD::HideSettingsMenu()
+{
+	GEngine->GameViewport->RemoveViewportWidgetContent(SettingsWidgetContainer.ToSharedRef());
+
+	PlayerOwner->bShowMouseCursor = false;
+	PlayerOwner->SetInputMode(FInputModeGameOnly());
+}
