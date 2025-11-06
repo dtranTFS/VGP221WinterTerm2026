@@ -9,7 +9,10 @@ void AGameHUD::BeginPlay()
 	Super::BeginPlay();
 
 	// 2. Slates method of making UI
-	ShowSettingsMenu();
+	// ShowSettingsMenu();
+
+	// 3. UMG method of making UI
+	SpawnGameMenu(StartingGameWidget);
 }
 
 void AGameHUD::DrawHUD()
@@ -54,4 +57,15 @@ void AGameHUD::HideSettingsMenu()
 
 	PlayerOwner->bShowMouseCursor = false;
 	PlayerOwner->SetInputMode(FInputModeGameOnly());
+}
+
+void AGameHUD::SpawnGameMenu(TSubclassOf<UGameMenuWidget> NewGameMenuWidget)
+{
+	if (GameMenuWidgetContainer) {
+		GameMenuWidgetContainer->RemoveFromParent();
+		GameMenuWidgetContainer = nullptr;
+	}
+
+	GameMenuWidgetContainer = CreateWidget<UGameMenuWidget>(GetWorld(), NewGameMenuWidget);
+	GameMenuWidgetContainer->AddToViewport();
 }
