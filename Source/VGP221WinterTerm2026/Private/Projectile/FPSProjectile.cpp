@@ -80,6 +80,12 @@ void AFPSProjectile::FireInDirection(const FVector& ShootDirection)
 
 void AFPSProjectile::OnWhateverWeWantToNameThis(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
+	if (AEnemyAICharacter* enemy = Cast<AEnemyAICharacter>(OtherActor)) {
+		enemy->OnDamage(50.0f);
+		Destroy();
+		return;
+	}
+
 	if (OtherActor != this && OtherComponent->IsSimulatingPhysics()) {
 		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.0f, Hit.ImpactPoint);
 		Destroy();
