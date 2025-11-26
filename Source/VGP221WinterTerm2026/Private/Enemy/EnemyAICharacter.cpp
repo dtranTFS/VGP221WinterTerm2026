@@ -15,7 +15,6 @@ AEnemyAICharacter::AEnemyAICharacter()
 void AEnemyAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame

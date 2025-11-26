@@ -11,6 +11,8 @@
 #include "HUD/GameHUD.h"
 #include "FPSCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPlayerDied);
+
 UCLASS()
 class VGP221WINTERTERM2026_API AFPSCharacter : public ACharacter
 {
@@ -43,6 +45,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AFPSProjectile> ProjectileClass;
 
+	UPROPERTY(EditAnywhere)
+	FOnPlayerDied OnPlayerDied;
+
 	UFUNCTION()
 	void MoveForwardDannyTest(float value);
 
@@ -60,6 +65,8 @@ public:
 
 	UFUNCTION()
 	void OnHurtPlayer(float DamageAmount);
+
+	float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 
 private:
 	float Health = 100.0f;

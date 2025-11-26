@@ -30,4 +30,21 @@ void AFPSProjectGameMode::StartPlay()
 
 	// 4. Modern way of debugging valules
 	UE_LOGFMT(LogTemp, Warning, "TestNumber: {0}, TestFloat: {1}, NameTest: {2}", TestNumber, TestFloat, "Danny");
+
+	// Get player and bind on died
+	AFPSCharacter* player = Cast<AFPSCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (player) {
+		player->OnPlayerDied.AddDynamic(this, &AFPSProjectGameMode::HandlePlayerDied);
+	}
+}
+
+void AFPSProjectGameMode::HandlePlayerDied()
+{
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AFPSProjectGameMode::GoToGameOver, 2.0f, false);
+}
+
+void AFPSProjectGameMode::GoToGameOver()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Game Over!"));
 }
