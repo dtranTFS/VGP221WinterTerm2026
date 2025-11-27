@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "EnemyAICharacter.generated.h"
+class AFPSCharacter;
 
 UCLASS()
 class VGP221WINTERTERM2026_API AEnemyAICharacter : public ACharacter
@@ -30,6 +31,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	float DamageAmount = 10.0f;
+
+	UFUNCTION()
+	void HandlePlayerDied();
 
 private:
 	int Health = 100;
